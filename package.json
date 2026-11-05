@@ -1,0 +1,16 @@
+{
+  "name": "seams-build-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "license": "MIT",
+  "description": "seams-build workspace: seams for the build and test toolchain.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ai-swfactory-oss/seams-build.git"
+  },
+  "packageManager": "pnpm@10.32.1",
+  "devDependencies": {
+    "@types/node": "^24.0.0"
+  }
+}
