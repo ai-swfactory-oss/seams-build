@@ -2,7 +2,7 @@
 
 Seams for the build and test toolchain: TypeScript, its loader, Rollup, test runners and pytest. Each package puts a typed seam between code and one tool, with a fake under `./testing`.
 
-The packages are skeletons for now: their code arrives by migration from `ai-swfactory/seams`.
+This repository holds only the guarded skeleton so far: each package's create function returns a seam that reports an empty result, and its `./testing` holds a fake of that seam.
 
 ## Packages
 
