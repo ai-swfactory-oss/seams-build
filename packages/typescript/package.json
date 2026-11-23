@@ -1,13 +1,13 @@
 {
-  "name": "@ai-swfactory-oss/seams-typescript-loader",
-  "description": "The TypeScript loader seam: loads TypeScript modules at runtime and returns what it loaded as plain data. A fake lives under ./testing.",
+  "name": "@ai-swfactory-oss/typescript",
+  "description": "A pure TypeScript library: type-checks and emits the sources of a Tree in-process, and returns its diagnostics and emitted outputs as plain data.",
   "version": "0.0.0",
   "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ai-swfactory-oss/seams-build.git",
-    "directory": "packages/seams-typescript-loader"
+    "directory": "packages/typescript"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -20,11 +20,6 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./testing": {
-      "source": "./src/testing/index.ts",
-      "types": "./dist/testing/index.d.ts",
-      "import": "./dist/testing/index.js"
-    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -32,6 +27,10 @@
     "src",
     "!dist/**/*.tgz"
   ],
+  "dependencies": {
+    "@ai-swfactory-oss/files": "^4.0.0",
+    "typescript": "^5.9.3"
+  },
   "devDependencies": {
     "@types/node": "^24.0.0"
   }

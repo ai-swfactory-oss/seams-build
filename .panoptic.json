@@ -6,7 +6,6 @@
     "@ai-swfactory-oss/seams-python": { "kind": "sdk" },
     "@ai-swfactory-oss/seams-rollup": { "kind": "sdk" },
     "@ai-swfactory-oss/seams-test-runner": { "kind": "sdk" },
-    "@ai-swfactory-oss/seams-typescript": { "kind": "sdk" },
-    "@ai-swfactory-oss/seams-typescript-loader": { "kind": "sdk" }
+    "@ai-swfactory-oss/typescript": { "kind": "sdk" }
   }
 }

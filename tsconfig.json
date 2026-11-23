@@ -49,10 +49,7 @@
       "path": "./packages/seams-test-runner"
     },
     {
-      "path": "./packages/seams-typescript"
-    },
-    {
-      "path": "./packages/seams-typescript-loader"
+      "path": "./packages/typescript"
     }
   ],
   "include": [
