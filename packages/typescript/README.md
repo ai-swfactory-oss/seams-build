@@ -5,7 +5,7 @@ A pure TypeScript library. `compileTree(tree, options)` type-checks and emits th
 ```ts
 import { compileTree } from '@ai-swfactory-oss/typescript'
 
-const { diagnostics, outputs } = compileTree(tree, {
+const { diagnostics, instantiations, outputs } = compileTree(tree, {
   libDirectory: 'lib',
   lib: 'es2022',
   target: 'es2022',
@@ -20,6 +20,14 @@ const { diagnostics, outputs } = compileTree(tree, {
 - A diagnostic carries the file it names (or `null`), its 1-based line and column, its code, its category and its message.
 - The outputs are a Tree of the emitted files, at the paths the compiler writes them. With `emit: false` it is empty.
 - The options are the package's own plain data; no TypeScript compiler type appears in its public types.
+
+## Type-instantiation counts
+
+`instantiations` reports the in-process checker's type-instantiation counts as data:
+
+- `program` is the program's type-instantiation count once the whole program is type-checked.
+- `files` lists each source file with its `count`. A file's count is the instantiation delta while checking that file: the program's instantiation count after checking it minus the count before, with the files checked in the program's root-file order (the sources sorted by path). Instantiations a file causes in a file checked later are counted for the file being checked, so a file's count depends on that order.
+- The same Tree and options give the same program and root-file order, and so the same counts.
 
 ## The standard library declaration files
 

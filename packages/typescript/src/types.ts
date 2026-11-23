@@ -31,7 +31,18 @@ export interface TypeScriptDiagnostic {
   readonly message: string
 }
 
+export interface TypeScriptFileInstantiations {
+  readonly path: string
+  readonly count: number
+}
+
+export interface TypeScriptInstantiations {
+  readonly program: number
+  readonly files: readonly TypeScriptFileInstantiations[]
+}
+
 export interface TypeScriptResult {
   readonly diagnostics: readonly TypeScriptDiagnostic[]
+  readonly instantiations: TypeScriptInstantiations
   readonly outputs: Tree
 }

@@ -4,6 +4,7 @@ import ts from 'typescript'
 import type {
   TypeScriptDiagnostic,
   TypeScriptDiagnosticCategory,
+  TypeScriptFileInstantiations,
   TypeScriptLib,
   TypeScriptModule,
   TypeScriptOptions,
@@ -116,10 +117,17 @@ export const compileTree = (tree: Tree, options: TypeScriptOptions): TypeScriptR
     getDirectories: () => [],
   }
   const program = ts.createProgram({ rootNames: rootNames.map(path => `${ROOT}${path}`), options: compilerOptions, host })
+  const fileCounts = program.getRootFileNames().map((fileName): TypeScriptFileInstantiations => {
+    const before = program.getInstantiationCount()
+    program.getSemanticDiagnostics(program.getSourceFile(fileName))
+    return { path: trimmed(fileName), count: program.getInstantiationCount() - before }
+  })
   const checked = ts.getPreEmitDiagnostics(program)
+  const programCount = program.getInstantiationCount()
   const emitted = options.emit ? program.emit().diagnostics : []
   return {
     diagnostics: [...checked, ...emitted].map(diagnosticOf),
+    instantiations: { program: programCount, files: fileCounts },
     outputs: { entries: outputs.sort((a, b) => a.path.localeCompare(b.path)) },
   }
 }

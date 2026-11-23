@@ -44,6 +44,14 @@ const OPTIONS: TypeScriptOptions = {
   emit: true,
 }
 
+const GENERIC_SOURCE = [
+  'type Box<T> = { readonly value: T }',
+  'const box = <T>(value: T): Box<T> => ({ value })',
+  'export const boxed = box(1)',
+  "export const named = box('a')",
+  '',
+].join('\n')
+
 const treeOf = (...entries: readonly FileEntry[]): Tree => ({ entries: [...LIB_FILES, ...entries] })
 
 const outputsOf = (tree: Tree): readonly (readonly [string, string])[] =>
@@ -83,6 +91,35 @@ describe('compileTree', () => {
     const result = compileTree({ entries: [file('src/answer.ts', 'export const answer = 42\n')] }, OPTIONS)
 
     expect(result.diagnostics.some(diagnostic => diagnostic.message.includes('lib.es5.d.ts'))).toBe(true)
+  })
+
+  it('reports the program type-instantiation count of a type check over a Tree', () => {
+    const result = compileTree(treeOf(file('src/boxes.ts', GENERIC_SOURCE)), OPTIONS)
+
+    expect(result.instantiations.program).toBeGreaterThan(0)
+  })
+
+  it('reports each file count as the instantiation delta while checking that file, in the program root-file order', () => {
+    const result = compileTree(
+      treeOf(
+        file('src/zeta.ts', 'export const zeta = 1\n'),
+        file('src/boxes.ts', GENERIC_SOURCE),
+        file('src/alpha.ts', 'export const alpha = 2\n'),
+      ),
+      { ...OPTIONS, declaration: false, emit: false },
+    )
+    const { program, files } = result.instantiations
+    const boxes = files.find(counted => counted.path === 'src/boxes.ts')
+
+    expect(files.map(counted => counted.path)).toEqual(['src/alpha.ts', 'src/boxes.ts', 'src/zeta.ts'])
+    expect(boxes?.count).toBeGreaterThan(0)
+    expect(files.reduce((sum, counted) => sum + counted.count, 0)).toBe(program)
+  })
+
+  it('gives the same program and per-file counts when the same program is checked twice in the same root-file order', () => {
+    const tree = treeOf(file('src/boxes.ts', GENERIC_SOURCE), file('src/more.ts', `${GENERIC_SOURCE}export const more = box(true)\n`))
+
+    expect(compileTree(tree, OPTIONS).instantiations).toEqual(compileTree(tree, OPTIONS).instantiations)
   })
 
   it('takes only the Tree and the options, which are a type the package declares, and exports only compileTree', () => {
