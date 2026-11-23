@@ -1,3 +1,6 @@
+export type { TreeAlias, TreeAliasPattern, TreeResolution, TreeResolverConfig } from './resolve'
+export { resolveInTree } from './resolve'
+
 export interface EmittedFile {
   readonly path: string
   readonly contents: string

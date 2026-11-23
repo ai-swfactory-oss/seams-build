@@ -19,6 +19,10 @@ importers:
         version: 24.19.2
 
   packages/seams-rollup:
+    dependencies:
+      '@ai-swfactory-oss/files':
+        specifier: ^4.0.0
+        version: 4.0.0
     devDependencies:
       '@types/node':
         specifier: ^24.0.0

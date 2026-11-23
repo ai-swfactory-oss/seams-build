@@ -32,6 +32,9 @@
     "src",
     "!dist/**/*.tgz"
   ],
+  "dependencies": {
+    "@ai-swfactory-oss/files": "^4.0.0"
+  },
   "devDependencies": {
     "@types/node": "^24.0.0"
   }
