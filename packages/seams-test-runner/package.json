@@ -1,7 +1,7 @@
 {
   "name": "@ai-swfactory-oss/seams-test-runner",
   "description": "The test runner seam: runs a test suite and returns its results as plain data. A fake lives under ./testing.",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "license": "MIT",
   "repository": {
