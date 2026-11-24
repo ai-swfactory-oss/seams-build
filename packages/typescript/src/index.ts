@@ -1,5 +1,6 @@
 export { compileTree } from './compile'
 export { compileProject } from './project'
+export { standardLibrarySelection, typescriptVersion, withStandardLibrary } from './standard-library'
 export type {
   TypeScriptDiagnostic,
   TypeScriptDiagnosticCategory,

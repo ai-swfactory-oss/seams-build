@@ -11,3 +11,6 @@ TypeScriptResult: interface TypeScriptResult { readonly diagnostics: readonly Ty
 TypeScriptTarget: type TypeScriptTarget = 'es2015' | 'es2016' | 'es2017' | 'es2018' | 'es2019' | 'es2020' | 'es2021' | 'es2022' | 'esnext';
 compileProject: const compileProject: (tree: Tree, options: TypeScriptProjectOptions) => TypeScriptResult
 compileTree: const compileTree: (tree: Tree, options: TypeScriptOptions) => TypeScriptResult
+standardLibrarySelection: const standardLibrarySelection: Selection
+typescriptVersion: const typescriptVersion: string
+withStandardLibrary: const withStandardLibrary: (tree: Tree, standardLibrary: Tree, libDirectory: string) => Tree

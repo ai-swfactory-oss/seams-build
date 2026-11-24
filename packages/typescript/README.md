@@ -45,6 +45,21 @@ The caller supplies the standard library declaration files in the Tree, under `l
 
 A file the compiler needs and the Tree lacks is reported as a diagnostic naming it.
 
+### The compiler's own standard library files
+
+The library names the compiler it runs and where that compiler's standard library files are, and the caller reads them with its own `Files` port:
+
+```ts
+import { compileTree, standardLibrarySelection, typescriptVersion, withStandardLibrary } from '@ai-swfactory-oss/typescript'
+
+const standardLibrary = await files.snapshot(standardLibrarySelection)
+const result = compileTree(withStandardLibrary(tree, standardLibrary, 'lib'), { ...options, libDirectory: 'lib' })
+```
+
+- `typescriptVersion` is the version string of the TypeScript compiler the library runs.
+- `standardLibrarySelection` is a `Selection` rooted at the directory that holds that compiler's standard library files, written relative to the filesystem root, and it selects every `lib.*.d.ts` file there.
+- `withStandardLibrary(tree, standardLibrary, libDirectory)` returns `tree` with every file of the `standardLibrary` snapshot added under `libDirectory`, at its file name relative to the snapshot's root. The entries of `tree` are kept unchanged.
+
 ## Compiling a project from its own tsconfig
 
 `compileProject(tree, { tsconfig, libDirectory, outDir })` checks the project that a tsconfig in the Tree declares, with the options that tsconfig declares.
