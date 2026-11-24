@@ -9,6 +9,9 @@ import type {
   SyntaxProperty,
   SyntaxStatement,
   SyntaxType,
+  SyntaxTypeMember,
+  SyntaxTypeNode,
+  SyntaxTypeParameter,
   UnsupportedSyntax,
 } from './syntax-types'
 import { normalized, treeFilesOf } from './tree-files'
@@ -107,21 +110,78 @@ const readerOf = (source: ts.SourceFile, path: string) => {
 
   const variableOf = (node: ts.VariableStatement): SyntaxStatement => {
     const [declaration, ...others] = node.declarationList.declarations
-    if (declaration === undefined || others.length > 0) return unsupported(node)
-    if (!ts.isIdentifier(declaration.name) || declaration.initializer === undefined) return unsupported(node)
+    if (declaration === undefined || others.length > 0 || !ts.isIdentifier(declaration.name)) return unsupported(node)
+    const declared = hasModifier(node, ts.SyntaxKind.DeclareKeyword)
+    if (declared === (declaration.initializer !== undefined)) return unsupported(node)
     return {
       kind: 'variable',
       exported: hasModifier(node, ts.SyntaxKind.ExportKeyword),
       name: declaration.name.text,
       type: typeOf(declaration.type),
-      initializer: expressionOf(declaration.initializer),
+      initializer:
+        declaration.initializer === undefined
+          ? { kind: 'declared' }
+          : { kind: 'initialized', expression: expressionOf(declaration.initializer) },
     }
   }
+
+  const typeParameterOf = (parameter: ts.ParameterDeclaration): SyntaxTypeParameter =>
+    ts.isIdentifier(parameter.name) &&
+    parameter.type !== undefined &&
+    parameter.questionToken === undefined &&
+    parameter.dotDotDotToken === undefined
+      ? { kind: 'parameter', name: parameter.name.text, type: typeNodeOf(parameter.type) }
+      : unsupported(parameter)
+
+  const memberOf = (member: ts.TypeElement): SyntaxTypeMember => {
+    if (ts.isPropertySignature(member) && member.questionToken === undefined && member.type !== undefined) {
+      const name = nameOf(member.name)
+      if (name !== null) {
+        return {
+          kind: 'property',
+          name,
+          readonly: hasModifier(member, ts.SyntaxKind.ReadonlyKeyword),
+          type: typeNodeOf(member.type),
+        }
+      }
+    }
+    return unsupported(member)
+  }
+
+  const typeNodeOf = (node: ts.TypeNode): SyntaxTypeNode => {
+    if (ts.isParenthesizedTypeNode(node)) return typeNodeOf(node.type)
+    const text = node.getText(source)
+    if (ts.isFunctionTypeNode(node) && node.typeParameters === undefined) {
+      return { kind: 'function', text, parameters: node.parameters.map(typeParameterOf), returnType: typeNodeOf(node.type) }
+    }
+    if (ts.isTypeLiteralNode(node)) return { kind: 'object', text, members: node.members.map(memberOf) }
+    return { kind: 'text', text }
+  }
+
+  const isPlainDeclaration = (node: ts.InterfaceDeclaration | ts.TypeAliasDeclaration): boolean =>
+    node.typeParameters === undefined && !hasModifier(node, ts.SyntaxKind.DefaultKeyword)
+
+  const interfaceOf = (node: ts.InterfaceDeclaration): SyntaxStatement =>
+    isPlainDeclaration(node) && node.heritageClauses === undefined
+      ? {
+          kind: 'interface',
+          exported: hasModifier(node, ts.SyntaxKind.ExportKeyword),
+          name: node.name.text,
+          properties: node.members.map(memberOf),
+        }
+      : unsupported(node)
+
+  const typeAliasOf = (node: ts.TypeAliasDeclaration): SyntaxStatement =>
+    isPlainDeclaration(node)
+      ? { kind: 'type-alias', exported: hasModifier(node, ts.SyntaxKind.ExportKeyword), name: node.name.text, type: typeNodeOf(node.type) }
+      : unsupported(node)
 
   const statementOf = (node: ts.Statement): SyntaxStatement => {
     if (ts.isImportDeclaration(node)) return importOf(node)
     if (ts.isExpressionStatement(node)) return { kind: 'expression', expression: expressionOf(node.expression) }
     if (ts.isVariableStatement(node)) return variableOf(node)
+    if (ts.isInterfaceDeclaration(node)) return interfaceOf(node)
+    if (ts.isTypeAliasDeclaration(node)) return typeAliasOf(node)
     return unsupported(node)
   }
 

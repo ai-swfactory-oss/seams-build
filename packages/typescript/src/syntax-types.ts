@@ -51,18 +51,52 @@ export interface SyntaxImport {
   readonly names: readonly SyntaxImportName[]
 }
 
+export type SyntaxInitializer = { readonly kind: 'initialized'; readonly expression: SyntaxExpression } | { readonly kind: 'declared' }
+
 export interface SyntaxVariable {
   readonly kind: 'variable'
   readonly exported: boolean
   readonly name: string
   readonly type: SyntaxType
-  readonly initializer: SyntaxExpression
+  readonly initializer: SyntaxInitializer
+}
+
+export type SyntaxTypeMember =
+  | { readonly kind: 'property'; readonly name: string; readonly readonly: boolean; readonly type: SyntaxTypeNode }
+  | UnsupportedSyntax
+
+export type SyntaxTypeParameter = { readonly kind: 'parameter'; readonly name: string; readonly type: SyntaxTypeNode } | UnsupportedSyntax
+
+export type SyntaxTypeNode =
+  | {
+      readonly kind: 'function'
+      readonly text: string
+      readonly parameters: readonly SyntaxTypeParameter[]
+      readonly returnType: SyntaxTypeNode
+    }
+  | { readonly kind: 'object'; readonly text: string; readonly members: readonly SyntaxTypeMember[] }
+  | { readonly kind: 'text'; readonly text: string }
+
+export interface SyntaxInterface {
+  readonly kind: 'interface'
+  readonly exported: boolean
+  readonly name: string
+  readonly properties: readonly SyntaxTypeMember[]
+}
+
+export interface SyntaxTypeAlias {
+  readonly kind: 'type-alias'
+  readonly exported: boolean
+  readonly name: string
+  readonly type: SyntaxTypeNode
 }
 
 export type SyntaxStatement =
   | SyntaxImport
   | { readonly kind: 'expression'; readonly expression: SyntaxExpression }
   | SyntaxVariable
+  | SyntaxInterface
+  | SyntaxTypeAlias
   | UnsupportedSyntax
 
 export interface ModuleSyntax {

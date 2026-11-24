@@ -20,59 +20,68 @@ describe('moduleSyntaxOf', () => {
         name: 'callsBinding',
         type: { kind: 'annotated', text: 'Binding<CallsSdk>' },
         initializer: {
-          kind: 'call',
-          callee: { kind: 'identifier', name: 'bind' },
-          typeArguments: ['CallsSdk'],
-          arguments: [
-            {
-              kind: 'arrow',
-              async: false,
-              parameters: [{ kind: 'parameter', name: 'op', type: { kind: 'unannotated' } }],
-              returnType: { kind: 'unannotated' },
-              body: {
-                kind: 'array',
-                elements: [
-                  {
-                    kind: 'call',
-                    callee: { kind: 'identifier', name: 'op' },
-                    typeArguments: [],
-                    arguments: [
-                      {
-                        kind: 'arrow',
-                        async: false,
-                        parameters: [{ kind: 'parameter', name: 'api', type: { kind: 'unannotated' } }],
-                        returnType: { kind: 'unannotated' },
-                        body: {
-                          kind: 'property-access',
-                          object: { kind: 'property-access', object: { kind: 'identifier', name: 'api' }, name: 'calls' },
-                          name: 'list',
-                        },
-                      },
-                      {
-                        kind: 'object',
-                        properties: [
-                          {
-                            kind: 'property',
-                            name: 'command',
-                            value: {
-                              kind: 'array',
-                              elements: [
-                                { kind: 'string', value: 'calls' },
-                                { kind: 'string', value: 'list' },
-                              ],
-                            },
+          kind: 'initialized',
+          expression: {
+            kind: 'call',
+            callee: { kind: 'identifier', name: 'bind' },
+            typeArguments: ['CallsSdk'],
+            arguments: [
+              {
+                kind: 'arrow',
+                async: false,
+                parameters: [{ kind: 'parameter', name: 'op', type: { kind: 'unannotated' } }],
+                returnType: { kind: 'unannotated' },
+                body: {
+                  kind: 'array',
+                  elements: [
+                    {
+                      kind: 'call',
+                      callee: { kind: 'identifier', name: 'op' },
+                      typeArguments: [],
+                      arguments: [
+                        {
+                          kind: 'arrow',
+                          async: false,
+                          parameters: [{ kind: 'parameter', name: 'api', type: { kind: 'unannotated' } }],
+                          returnType: { kind: 'unannotated' },
+                          body: {
+                            kind: 'property-access',
+                            object: { kind: 'property-access', object: { kind: 'identifier', name: 'api' }, name: 'calls' },
+                            name: 'list',
                           },
-                        ],
-                      },
-                    ],
-                  },
-                ],
+                        },
+                        {
+                          kind: 'object',
+                          properties: [
+                            {
+                              kind: 'property',
+                              name: 'command',
+                              value: {
+                                kind: 'array',
+                                elements: [
+                                  { kind: 'string', value: 'calls' },
+                                  { kind: 'string', value: 'list' },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
               },
-            },
-          ],
+            ],
+          },
         },
       },
-      { kind: 'variable', exported: false, name: 'limit', type: { kind: 'unannotated' }, initializer: { kind: 'number', value: 10 } },
+      {
+        kind: 'variable',
+        exported: false,
+        name: 'limit',
+        type: { kind: 'unannotated' },
+        initializer: { kind: 'initialized', expression: { kind: 'number', value: 10 } },
+      },
     ])
   })
 })
