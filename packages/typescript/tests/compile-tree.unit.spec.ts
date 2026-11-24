@@ -122,8 +122,8 @@ describe('compileTree', () => {
     expect(compileTree(tree, OPTIONS).instantiations).toEqual(compileTree(tree, OPTIONS).instantiations)
   })
 
-  it('takes only the Tree and the options, which are a type the package declares, and exports only compileTree', () => {
+  it('takes only the Tree and the options, which are a type the package declares, and the entry exports only the two compile functions', () => {
     expectTypeOf(compileTree).parameters.toEqualTypeOf<[Tree, TypeScriptOptions]>()
-    expect(Object.keys(entry)).toEqual(['compileTree'])
+    expect(Object.keys(entry).sort()).toEqual(['compileProject', 'compileTree'])
   })
 })

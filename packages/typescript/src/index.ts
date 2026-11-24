@@ -1,4 +1,5 @@
 export { compileTree } from './compile'
+export { compileProject } from './project'
 export type {
   TypeScriptDiagnostic,
   TypeScriptDiagnosticCategory,
@@ -8,6 +9,7 @@ export type {
   TypeScriptModule,
   TypeScriptOptions,
   TypeScriptPosition,
+  TypeScriptProjectOptions,
   TypeScriptResult,
   TypeScriptTarget,
 } from './types'

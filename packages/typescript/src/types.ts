@@ -41,6 +41,12 @@ export interface TypeScriptInstantiations {
   readonly files: readonly TypeScriptFileInstantiations[]
 }
 
+export interface TypeScriptProjectOptions {
+  readonly tsconfig: string
+  readonly libDirectory: string
+  readonly outDir: string | null
+}
+
 export interface TypeScriptResult {
   readonly diagnostics: readonly TypeScriptDiagnostic[]
   readonly instantiations: TypeScriptInstantiations
