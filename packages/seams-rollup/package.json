@@ -1,7 +1,6 @@
 {
   "name": "@ai-swfactory-oss/seams-rollup",
   "description": "The Rollup seam: bundles a build and returns the emitted files as plain data. A fake lives under ./testing.",
-  "version": "1.0.0",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -10,7 +9,8 @@
     "directory": "packages/seams-rollup"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com",
+    "tag": "latest"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
