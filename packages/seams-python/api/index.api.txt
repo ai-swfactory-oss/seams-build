@@ -1,0 +1,4 @@
+PytestOutcome: interface PytestOutcome { readonly nodeId: string; readonly passed: boolean; }
+PytestResult: interface PytestResult { readonly outcomes: readonly PytestOutcome[]; }
+Python: interface Python { readonly pytest: () => PytestResult; }
+createPython: const createPython: () => Python

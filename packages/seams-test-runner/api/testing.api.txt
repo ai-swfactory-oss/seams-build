@@ -1,0 +1,1 @@
+createFakeTestRunner: const createFakeTestRunner: (result?: RunResult) => TestRunner

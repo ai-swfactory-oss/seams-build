@@ -1,0 +1,4 @@
+RunResult: interface RunResult { readonly results: readonly TestResult[]; }
+TestResult: interface TestResult { readonly name: string; readonly passed: boolean; }
+TestRunner: interface TestRunner { readonly run: () => RunResult; }
+createTestRunner: const createTestRunner: () => TestRunner

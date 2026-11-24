@@ -1,0 +1,1 @@
+createFakeRollup: const createFakeRollup: (result?: BundleResult) => Rollup

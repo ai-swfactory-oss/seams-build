@@ -1,0 +1,9 @@
+BundleResult: interface BundleResult { readonly files: readonly EmittedFile[]; }
+EmittedFile: interface EmittedFile { readonly path: string; readonly contents: string; }
+Rollup: interface Rollup { readonly bundle: () => BundleResult; }
+TreeAlias: interface TreeAlias { readonly pattern: TreeAliasPattern; readonly target: string; }
+TreeAliasPattern: type TreeAliasPattern = '@/*' | '~/*';
+TreeResolution: type TreeResolution = { readonly kind: 'file'; readonly path: string; } | { readonly kind: 'external'; readonly id: string; } | { readonly kind: 'unresolved'; readonly specifier: string; readonly importer: string; readonly reason: string; };
+TreeResolverConfig: interface TreeResolverConfig { readonly aliases: readonly TreeAlias[]; readonly extensions: readonly string[]; }
+createRollup: const createRollup: () => Rollup
+resolveInTree: const resolveInTree: (tree: Tree, importer: string, specifier: string, config: TreeResolverConfig) => TreeResolution

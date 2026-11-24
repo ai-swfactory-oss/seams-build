@@ -1,0 +1,11 @@
+TypeScriptDiagnostic: interface TypeScriptDiagnostic { readonly file: string | null; readonly start: TypeScriptPosition | null; readonly code: number; readonly category: TypeScriptDiagnosticCategory; readonly message: string; }
+TypeScriptDiagnosticCategory: type TypeScriptDiagnosticCategory = 'error' | 'warning' | 'suggestion' | 'message';
+TypeScriptFileInstantiations: interface TypeScriptFileInstantiations { readonly path: string; readonly count: number; }
+TypeScriptInstantiations: interface TypeScriptInstantiations { readonly program: number; readonly files: readonly TypeScriptFileInstantiations[]; }
+TypeScriptLib: type TypeScriptLib = 'es5' | 'es2015' | 'es2016' | 'es2017' | 'es2018' | 'es2019' | 'es2020' | 'es2021' | 'es2022';
+TypeScriptModule: type TypeScriptModule = 'es2015' | 'es2020' | 'es2022' | 'esnext' | 'preserve';
+TypeScriptOptions: interface TypeScriptOptions { readonly libDirectory: string; readonly lib: TypeScriptLib; readonly target: TypeScriptTarget; readonly module: TypeScriptModule; readonly strict: boolean; readonly declaration: boolean; readonly emit: boolean; }
+TypeScriptPosition: interface TypeScriptPosition { readonly line: number; readonly column: number; }
+TypeScriptResult: interface TypeScriptResult { readonly diagnostics: readonly TypeScriptDiagnostic[]; readonly instantiations: TypeScriptInstantiations; readonly outputs: Tree; }
+TypeScriptTarget: type TypeScriptTarget = 'es2015' | 'es2016' | 'es2017' | 'es2018' | 'es2019' | 'es2020' | 'es2021' | 'es2022' | 'esnext';
+compileTree: const compileTree: (tree: Tree, options: TypeScriptOptions) => TypeScriptResult
