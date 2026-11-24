@@ -1,7 +1,6 @@
 {
   "name": "seams-build-monorepo",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "license": "MIT",
   "description": "seams-build workspace: seams for the build and test toolchain.",

@@ -59,7 +59,7 @@ export const treeFilesOf = (tree: Tree): TreeFiles => {
     const path = normalized(entry.path)
     if (entry.kind === 'file') files.set(path, entry.content)
     else if (entry.kind === 'symlink') links.set(path, entry.target)
-    else children.set(path, children.get(path) ?? new Set<string>())
+    else if (entry.kind === 'directory') children.set(path, children.get(path) ?? new Set<string>())
     addAncestors(path)
   }
   const resolved = (path: string): string | undefined => {

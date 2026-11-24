@@ -23,8 +23,9 @@ describe('standardLibrarySelection', () => {
     if (created.kind !== 'files') throw new Error(created.kind)
 
     const snapshot = await created.files.snapshot(standardLibrarySelection)
+    if (snapshot.kind !== 'snapshot') throw new Error(snapshot.kind)
 
-    expect([standardLibrarySelection.root, snapshot.entries.map(entry => entry.path)]).toEqual([
+    expect([standardLibrarySelection.root, snapshot.tree.entries.map(entry => entry.path)]).toEqual([
       libDirectory,
       [`${libDirectory}/lib.es2022.d.ts`, `${libDirectory}/lib.es5.d.ts`],
     ])

@@ -1,3 +1,12 @@
+ModuleSyntax: interface ModuleSyntax { readonly statements: readonly SyntaxStatement[]; readonly diagnostics: readonly TypeScriptDiagnostic[]; }
+SyntaxExpression: type SyntaxExpression = { readonly kind: 'call'; readonly callee: SyntaxExpression; readonly typeArguments: readonly string[]; readonly arguments: readonly SyntaxExpression[]; } | { readonly kind: 'arrow'; readonly async: boolean; readonly parameters: readonly SyntaxParameter[]; readonly returnType: SyntaxType; readonly body: SyntaxExpression; } | { readonly kind: 'property-access'; readonly object: SyntaxExpression; readonly name: string; } | { readonly kind: 'object'; readonly properties: readonly SyntaxProperty[]; } | { readonly kind: 'array'; readonly elements: readonly SyntaxExpression[]; } | { readonly kind: 'string'; readonly value: string; } | { readonly kind: 'number'; readonly value: number; } | { readonly kind: 'boolean'; readonly value: boolean; } | { readonly kind: 'identifier'; readonly name: string; } | UnsupportedSyntax;
+SyntaxImport: interface SyntaxImport { readonly kind: 'import'; readonly from: string; readonly typeOnly: boolean; readonly defaultName: string | null; readonly names: readonly SyntaxImportName[]; }
+SyntaxImportName: interface SyntaxImportName { readonly name: string; readonly alias: string | null; readonly typeOnly: boolean; }
+SyntaxParameter: type SyntaxParameter = { readonly kind: 'parameter'; readonly name: string; readonly type: SyntaxType; } | UnsupportedSyntax;
+SyntaxProperty: type SyntaxProperty = { readonly kind: 'property'; readonly name: string; readonly value: SyntaxExpression; } | UnsupportedSyntax;
+SyntaxStatement: type SyntaxStatement = SyntaxImport | { readonly kind: 'expression'; readonly expression: SyntaxExpression; } | SyntaxVariable | UnsupportedSyntax;
+SyntaxType: type SyntaxType = { readonly kind: 'annotated'; readonly text: string; } | { readonly kind: 'unannotated'; };
+SyntaxVariable: interface SyntaxVariable { readonly kind: 'variable'; readonly exported: boolean; readonly name: string; readonly type: SyntaxType; readonly initializer: SyntaxExpression; }
 TypeScriptDiagnostic: interface TypeScriptDiagnostic { readonly file: string | null; readonly start: TypeScriptPosition | null; readonly code: number; readonly category: TypeScriptDiagnosticCategory; readonly message: string; }
 TypeScriptDiagnosticCategory: type TypeScriptDiagnosticCategory = 'error' | 'warning' | 'suggestion' | 'message';
 TypeScriptFileInstantiations: interface TypeScriptFileInstantiations { readonly path: string; readonly count: number; }
@@ -9,8 +18,10 @@ TypeScriptPosition: interface TypeScriptPosition { readonly line: number; readon
 TypeScriptProjectOptions: interface TypeScriptProjectOptions { readonly tsconfig: string; readonly libDirectory: string; readonly outDir: string | null; readonly rootNames?: readonly string[]; }
 TypeScriptResult: interface TypeScriptResult { readonly diagnostics: readonly TypeScriptDiagnostic[]; readonly instantiations: TypeScriptInstantiations; readonly outputs: Tree; }
 TypeScriptTarget: type TypeScriptTarget = 'es2015' | 'es2016' | 'es2017' | 'es2018' | 'es2019' | 'es2020' | 'es2021' | 'es2022' | 'esnext';
+UnsupportedSyntax: interface UnsupportedSyntax { readonly kind: 'unsupported'; readonly path: string; readonly line: number; readonly column: number; readonly syntax: string; }
 compileProject: const compileProject: (tree: Tree, options: TypeScriptProjectOptions) => TypeScriptResult
 compileTree: const compileTree: (tree: Tree, options: TypeScriptOptions) => TypeScriptResult
+moduleSyntaxOf: const moduleSyntaxOf: (tree: Tree, path: string) => ModuleSyntax
 standardLibrarySelection: const standardLibrarySelection: Selection
 typescriptVersion: const typescriptVersion: string
 withStandardLibrary: const withStandardLibrary: (tree: Tree, standardLibrary: Tree, libDirectory: string) => Tree

@@ -33,7 +33,7 @@
     "!dist/**/*.tgz"
   ],
   "dependencies": {
-    "@ai-swfactory-oss/files": "^4.0.0"
+    "@ai-swfactory-oss/files": "^6.0.1"
   },
   "devDependencies": {
     "@types/node": "^24.0.0"

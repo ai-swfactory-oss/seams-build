@@ -127,6 +127,7 @@ describe('compileTree', () => {
     expect(Object.keys(entry).sort()).toEqual([
       'compileProject',
       'compileTree',
+      'moduleSyntaxOf',
       'standardLibrarySelection',
       'typescriptVersion',
       'withStandardLibrary',
