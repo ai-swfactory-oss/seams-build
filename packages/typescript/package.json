@@ -29,7 +29,7 @@
   ],
   "dependencies": {
     "@ai-swfactory-oss/files": "^4.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
     "@types/node": "^24.0.0"
