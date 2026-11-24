@@ -6,7 +6,7 @@ TypeScriptLib: type TypeScriptLib = 'es5' | 'es2015' | 'es2016' | 'es2017' | 'es
 TypeScriptModule: type TypeScriptModule = 'es2015' | 'es2020' | 'es2022' | 'esnext' | 'preserve';
 TypeScriptOptions: interface TypeScriptOptions { readonly libDirectory: string; readonly lib: TypeScriptLib; readonly target: TypeScriptTarget; readonly module: TypeScriptModule; readonly strict: boolean; readonly declaration: boolean; readonly emit: boolean; }
 TypeScriptPosition: interface TypeScriptPosition { readonly line: number; readonly column: number; }
-TypeScriptProjectOptions: interface TypeScriptProjectOptions { readonly tsconfig: string; readonly libDirectory: string; readonly outDir: string | null; }
+TypeScriptProjectOptions: interface TypeScriptProjectOptions { readonly tsconfig: string; readonly libDirectory: string; readonly outDir: string | null; readonly rootNames?: readonly string[]; }
 TypeScriptResult: interface TypeScriptResult { readonly diagnostics: readonly TypeScriptDiagnostic[]; readonly instantiations: TypeScriptInstantiations; readonly outputs: Tree; }
 TypeScriptTarget: type TypeScriptTarget = 'es2015' | 'es2016' | 'es2017' | 'es2018' | 'es2019' | 'es2020' | 'es2021' | 'es2022' | 'esnext';
 compileProject: const compileProject: (tree: Tree, options: TypeScriptProjectOptions) => TypeScriptResult

@@ -57,7 +57,7 @@ const { diagnostics, outputs } = compileProject(tree, { tsconfig: 'packages/app/
 
 - The tsconfig is read by TypeScript's own config parser over the Tree. `extends` is followed, a package specifier included, which is resolved from the Tree's `node_modules`.
 - Every compiler option the tsconfig declares applies. With `outDir` given, the call sets `outDir` and `declarationDir` to it, turns `declaration` on and `noEmit` off, and emits the project's declarations there; with `outDir: null` nothing is emitted.
-- `files`, `include` and `exclude` decide the root files.
+- `files`, `include` and `exclude` decide the root files, unless `rootNames` is given: then those Tree paths are the root files, whether or not the tsconfig includes them, and a file no root reaches is not checked. A `rootNames` path the Tree lacks is a diagnostic naming it.
 - A referenced project is seen through its declarations, which the Tree holds at the referenced project's output paths.
 - A tsconfig error (an unknown option, a missing `extends` target, a malformed file) is a diagnostic with category `error` that names the tsconfig, or for a missing `extends` target the file it could not find. Nothing throws.
 - The standard library files come from `libDirectory`, under the names the tsconfig's `lib` and `target` select. Type packages come from the Tree's `node_modules`.

@@ -45,6 +45,7 @@ export interface TypeScriptProjectOptions {
   readonly tsconfig: string
   readonly libDirectory: string
   readonly outDir: string | null
+  readonly rootNames?: readonly string[]
 }
 
 export interface TypeScriptResult {

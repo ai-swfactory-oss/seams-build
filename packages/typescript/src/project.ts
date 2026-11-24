@@ -55,7 +55,7 @@ export const compileProject = (tree: Tree, options: TypeScriptProjectOptions): T
     getParsedCommandLine: configFile => parsedOf(configFile, undefined),
   }
   const program = ts.createProgram({
-    rootNames: parsed.fileNames,
+    rootNames: options.rootNames === undefined ? parsed.fileNames : options.rootNames.map(absolute),
     options: parsed.options,
     projectReferences: parsed.projectReferences,
     configFileParsingDiagnostics: ts.getConfigFileParsingDiagnostics(parsed),
