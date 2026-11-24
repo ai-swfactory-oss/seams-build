@@ -51,7 +51,7 @@ export const compileProject = (tree: Tree, options: TypeScriptProjectOptions): T
     readFile: files.textOf,
     directoryExists: files.directoryExists,
     getDirectories: files.directoriesIn,
-    realpath: path => path,
+    realpath: files.realpath,
     getParsedCommandLine: configFile => parsedOf(configFile, undefined),
   }
   const program = ts.createProgram({

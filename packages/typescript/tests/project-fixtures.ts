@@ -1,4 +1,4 @@
-import type { FileEntry, Tree } from '@ai-swfactory-oss/files'
+import type { FileEntry, SymlinkEntry, Tree, TreeEntry } from '@ai-swfactory-oss/files'
 
 import type { TypeScriptResult } from '../src/index'
 
@@ -7,6 +7,8 @@ const encoder = new TextEncoder()
 const decoder = new TextDecoder()
 
 export const file = (path: string, text: string): FileEntry => ({ path, kind: 'file', content: encoder.encode(text), executable: false })
+
+export const symlink = (path: string, target: string): SymlinkEntry => ({ path, kind: 'symlink', target })
 
 export const tsconfig = (path: string, config: object): FileEntry => file(path, JSON.stringify(config, null, 2))
 
@@ -32,7 +34,7 @@ const LIB_FILES: readonly FileEntry[] = [
 
 export const BASE_OPTIONS = { lib: ['es5'], target: 'es2022', module: 'esnext', moduleResolution: 'bundler', strict: true }
 
-export const projectTree = (...entries: readonly FileEntry[]): Tree => ({ entries: [...LIB_FILES, ...entries] })
+export const projectTree = (...entries: readonly TreeEntry[]): Tree => ({ entries: [...LIB_FILES, ...entries] })
 
 export const PROJECT = { tsconfig: 'tsconfig.json', libDirectory: 'lib', outDir: null }
 

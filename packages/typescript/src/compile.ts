@@ -66,7 +66,8 @@ export const compileTree = (tree: Tree, options: TypeScriptOptions): TypeScriptR
     fileExists: files.has,
     readFile: files.textOf,
     directoryExists: files.directoryExists,
-    getDirectories: () => [],
+    getDirectories: files.directoriesIn,
+    realpath: files.realpath,
   }
   const program = ts.createProgram({ rootNames: rootNames.map(path => `${ROOT}${path}`), options: compilerOptionsOf(options), host })
   const { checked, instantiations } = instantiationsOf(program)

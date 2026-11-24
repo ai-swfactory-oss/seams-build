@@ -62,6 +62,10 @@ const { diagnostics, outputs } = compileProject(tree, { tsconfig: 'packages/app/
 - A tsconfig error (an unknown option, a missing `extends` target, a malformed file) is a diagnostic with category `error` that names the tsconfig, or for a missing `extends` target the file it could not find. Nothing throws.
 - The standard library files come from `libDirectory`, under the names the tsconfig's `lib` and `target` select. Type packages come from the Tree's `node_modules`.
 
+## Symlink entries
+
+Both `compileTree` and `compileProject` follow the Tree's symlink entries the way the compiler follows symlinks on a disk, so a symlinked install such as pnpm's `node_modules/.pnpm` layout resolves. A relative target resolves against the link's directory and an absolute one against the Tree root. A file's real path is its path with every symlink resolved, so a package reached through two links is one set of declarations. A symlink cycle, or a link to a path the Tree lacks, resolves to nothing.
+
 ## Licence
 
 MIT

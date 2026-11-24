@@ -27,39 +27,84 @@ export interface TreeFiles {
   readonly textOf: (fileName: string) => string | undefined
   readonly directoryExists: (directory: string) => boolean
   readonly directoriesIn: (directory: string) => string[]
+  readonly realpath: (path: string) => string
 }
 
+const MAX_LINK_HOPS = 40
+
+const parentOf = (path: string): string => path.slice(0, Math.max(path.lastIndexOf('/'), 0))
+
+const joined = (directory: string, name: string): string => (directory === '' ? name : `${directory}/${name}`)
+
+const segmentsOf = (path: string): readonly string[] =>
+  normalized(path)
+    .split('/')
+    .filter(segment => segment !== '')
+
 export const treeFilesOf = (tree: Tree): TreeFiles => {
-  const files = new Map(
-    tree.entries
-      .filter((entry): entry is FileEntry => entry.kind === 'file')
-      .map(entry => [normalized(entry.path), entry.content] as const),
-  )
-  const prefixOf = (directory: string): string => {
-    const path = normalized(directory)
-    return path === '' ? '' : `${path}/`
+  const files = new Map<string, Uint8Array>()
+  const links = new Map<string, string>()
+  const children = new Map<string, Set<string>>()
+  const addAncestors = (path: string): void => {
+    let child = path
+    while (child !== '') {
+      const parent = parentOf(child)
+      const names = children.get(parent) ?? new Set<string>()
+      names.add(child.slice(parent === '' ? 0 : parent.length + 1))
+      children.set(parent, names)
+      child = parent
+    }
   }
+  for (const entry of tree.entries) {
+    const path = normalized(entry.path)
+    if (entry.kind === 'file') files.set(path, entry.content)
+    else if (entry.kind === 'symlink') links.set(path, entry.target)
+    else children.set(path, children.get(path) ?? new Set<string>())
+    addAncestors(path)
+  }
+  const resolved = (path: string): string | undefined => {
+    let hops = 0
+    const walk = (segments: readonly string[]): string | undefined => {
+      let current = ''
+      for (const segment of segments) {
+        const candidate = joined(current, segment)
+        const target = links.get(candidate)
+        if (target === undefined) {
+          current = candidate
+          continue
+        }
+        hops += 1
+        if (hops > MAX_LINK_HOPS) return undefined
+        const next = walk(segmentsOf(target.startsWith('/') ? target : `${current}/${target}`))
+        if (next === undefined) return undefined
+        current = next
+      }
+      return current
+    }
+    return walk(segmentsOf(path))
+  }
+  const isDirectory = (real: string | undefined): boolean => real !== undefined && (real === '' || children.has(real))
   return {
     paths: () => [...files.keys()],
-    has: fileName => files.has(normalized(fileName)),
+    has: fileName => {
+      const real = resolved(fileName)
+      return real !== undefined && files.has(real)
+    },
     textOf: fileName => {
-      const content = files.get(normalized(fileName))
+      const real = resolved(fileName)
+      const content = real === undefined ? undefined : files.get(real)
       return content === undefined ? undefined : decoder.decode(content)
     },
-    directoryExists: directory => {
-      const prefix = prefixOf(directory)
-      return prefix === '' || [...files.keys()].some(path => path.startsWith(prefix))
-    },
+    directoryExists: directory => isDirectory(resolved(directory)),
     directoriesIn: directory => {
-      const prefix = prefixOf(directory)
-      const names = new Set<string>()
-      for (const path of files.keys()) {
-        if (!path.startsWith(prefix)) continue
-        const rest = path.slice(prefix.length).split('/')
-        const name = rest[0]
-        if (rest.length > 1 && name !== undefined) names.add(name)
-      }
-      return [...names].sort()
+      const real = resolved(directory)
+      const names = real === undefined ? undefined : children.get(real)
+      if (real === undefined || names === undefined) return []
+      return [...names].filter(name => isDirectory(resolved(joined(real, name)))).sort()
+    },
+    realpath: path => {
+      const real = resolved(path)
+      return real === undefined ? path : `${ROOT}${real}`
     },
   }
 }
