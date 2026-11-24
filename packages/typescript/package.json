@@ -1,7 +1,7 @@
 {
   "name": "@ai-swfactory-oss/typescript",
   "description": "A pure TypeScript library: type-checks and emits the sources of a Tree in-process, and returns its diagnostics and emitted outputs as plain data.",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "type": "module",
   "license": "MIT",
   "repository": {
